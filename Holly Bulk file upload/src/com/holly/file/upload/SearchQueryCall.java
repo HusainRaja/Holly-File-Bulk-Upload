@@ -25,7 +25,7 @@ public class SearchQueryCall {
         request.setSiperianObjectUid("BASE_OBJECT.C_BO_PRTY_RLE_COMM_PREF");
         request.setFilterCriteria("c_bo_prty_rle_comm_pref.X_SAP_ID=? AND c_bo_prty_rle_comm_pref.prty_fk IS NOT NULL");
         ArrayList params = new ArrayList(2);
-        params.add(new Parameter("0005133033"));
+        params.add(new Parameter("0005152659"));
         request.setFilterParameters(params);
         
         SearchQueryResponse response = (SearchQueryResponse) sipClient.process(request);

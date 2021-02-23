@@ -225,7 +225,7 @@ public class FileUploaderUsingRest {
 			return "text/plain";
 		}
 		
-		else if(fileExtension.compareTo("jpg")==0) {
+		else if((fileExtension.compareTo("jpg")==0) || (fileExtension.compareTo("jpeg")==0)) {
 			return "image/jpeg";
 		}
 		
@@ -243,7 +243,7 @@ public class FileUploaderUsingRest {
 		else if(fileExtension.compareTo("txt")==0) {
 			return "text";
 		}
-		else if(fileExtension.compareTo("jpg")==0) {
+		else if((fileExtension.compareTo("jpg")==0) || (fileExtension.compareTo("jpeg")==0)) {
 			return "image";
 		}
 		
