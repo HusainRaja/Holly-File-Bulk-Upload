@@ -46,6 +46,9 @@ public class FileUploaderUsingRest {
 	      System.out.println("path is:" + dirPath);
 	      System.out.println("Enter doc type, Either 'VAF' or 'W9': ");
 	      String docType = s.nextLine();
+	      System.out.println("Enter the record type, Either 'HFC', 'HEP' or 'HFLS' : ");
+	      String recType = s.nextLine();
+	      recType = recType.toUpperCase();
 	      docType = docType.toUpperCase();
 	      //dirPath = "C:\\Users\\hraja\\OneDrive - Huron Consulting Group\\Documents\\Holly Project\\Project Files\\File Upload\\Customer_Files\\HFC";
 	      File directoryPath = new File(dirPath);
@@ -73,11 +76,14 @@ public class FileUploaderUsingRest {
 	         
 	         //Fetching the Party rowid using the SAP ID
 	         
-	         rowid = getRowid(SAPId);
+	         rowid = getRowid(SAPId, recType);
 	         System.out.println("Rowid is: " + rowid);
 	         if(rowid == null) {
 	        	 System.out.println("Party FK not found, not processing this file.");
 	        	 continue;
+	         }
+	         else if(rowid.compareTo("Invalid Record Type")==0) {
+	        	 break;
 	         }
 	         
 	        //Creating the file Metadata and uploading the file
@@ -288,12 +294,22 @@ public class FileUploaderUsingRest {
 		
 	}
 
-	private static String getRowid(String sapId) {
+	private static String getRowid(String sapId, String recType) {
 		String rowid = null;
 		SearchQueryRequest request = new SearchQueryRequest();
         request.setRecordsToReturn(5);
         request.setSiperianObjectUid("BASE_OBJECT.C_BO_PRTY_RLE_COMM_PREF");
-        request.setFilterCriteria("c_bo_prty_rle_comm_pref.X_SAP_ID=? AND c_bo_prty_rle_comm_pref.prty_fk IS NOT NULL");
+        if(recType.compareTo("HEP")==0) {
+        	request.setFilterCriteria("c_bo_prty_rle_comm_pref.X_SAP_ID_1=? AND c_bo_prty_rle_comm_pref.prty_fk IS NOT NULL");
+        }
+        else if((recType.compareTo("HCP")==0) || (recType.compareTo("HFLS")==0)) {
+        	request.setFilterCriteria("c_bo_prty_rle_comm_pref.X_SAP_ID=? AND c_bo_prty_rle_comm_pref.prty_fk IS NOT NULL");
+        }
+        else {
+        	System.out.println("Invalid Record Type, exiting ...");
+        	return "Invalid Record Type";
+        }
+        
         ArrayList params = new ArrayList(2);
         params.add(new Parameter(sapId));
         request.setFilterParameters(params);
